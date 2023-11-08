@@ -14,15 +14,15 @@ class TestDefectNetwork:
     def test_create_ng_type(self):
         driver = login()
         ts = datetime.now().strftime("%s")
-        type_name_pre = "test_ui"
+        type_name_pre = "test_ui_v311_"
         DefectLearnPage_NGTYPE(driver).create_ng_type(type_name_pre + ts, 1)
         driver.quit()
 
     def test_update_ng_type(self):
         driver = login()
         ts = datetime.now().strftime("%s")
-        type_name_pre_old = "test_ui_old"
-        ng_type_list = DefectLearnPage_NGTYPE(driver).create_ng_type(type_name_pre_old + ts, 2)
+        type_name_pre_old = "test_ui_v311_old"
+        ng_type_list = DefectLearnPage_NGTYPE(driver).create_ng_type(type_name_pre_old + ts, 1)
         for ng_type in ng_type_list:
             DefectLearnPage_NGTYPE(driver).edit_ng_type(ng_type + "-new", ng_type)
 

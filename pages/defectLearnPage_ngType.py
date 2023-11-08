@@ -74,7 +74,7 @@ class DefectLearnPage_NGTYPE(BasePage):
 
     def edit_ng_type(self, new_name, old_name):
         # 点击ng type管理按钮
-        self.wait_element_clickable_and_click(DefectLearnLocs.el_btn_ng_type_manager_locator)
+        # self.wait_element_clickable_and_click(DefectLearnLocs.el_btn_ng_type_manager_locator)
         # 获取ng type列表
         row_ng_list = self.location_elements(DefectLearnLocs.el_row_ng_type_locator)
         if old_name != '':
@@ -110,13 +110,13 @@ class DefectLearnPage_NGTYPE(BasePage):
 
 if __name__ == '__main__':
     driver = login()
-    ts = datetime.now().strftime("%Y-%m-%d-%s")
+    ts = datetime.now().strftime("%H%M%S")
     # 创建ng type
-    # DefectLearnPage_NGTYPE(driver).create_ng_type("test-ui-new" + ts, 3)
+    DefectLearnPage_NGTYPE(driver).create_ng_type("a_v3110_" + ts, 3)
 
     # 删除ng type
     # DefectLearnPage_NGTYPE(driver).delete_ng_type()
 
     # 修改ng type
-    # DefectLearnPage_NGTYPE(driver).edit_ng_type("test-ui", "test-ui-new2023-10-20-16977662872")
+    # DefectLearnPage_NGTYPE(driver).edit_ng_type("test-ui", "test-ui-new2023-11-06-1699246504-1")
     driver.quit()

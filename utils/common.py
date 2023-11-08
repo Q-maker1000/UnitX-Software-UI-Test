@@ -15,3 +15,6 @@ def login():
     ipt_password.send_keys('1234')
     btn_login.click()
     return driver
+
+# if __name__ == '__main__':
+#     driver = start_software.start("optix")

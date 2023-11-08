@@ -230,7 +230,7 @@ if __name__ == '__main__':
     driver = login()
     # ts = int(time.time())
     ts = datetime.now().strftime("%Y-%m-%d-%s")
-    network_n = 'a_v3105_' + str(ts)
+    network_n = 'a_v3110_' + str(ts)
     # network_n = 'a_test-ui_' + str(ts)
     # network_n = 'a_test-ui_2023-10-20-1697794650'
 
@@ -270,10 +270,10 @@ if __name__ == '__main__':
     # DefectLearnPage_Network(driver).pre_process(0, 2448, 0, 2048, 2448, 2048)
     # LabelPage(driver).labeling(5)
     # DefectLearnPage_Network(driver).select_btn_in_network_bottom(network_n, "Train From Scratch")
-    DefectLearnPage_Network(driver).wait_training("a_test-ui_2023-10-23-1698032640")
+    # DefectLearnPage_Network(driver).wait_training("a_test-ui_2023-10-23-1698032640")
 
-    time.sleep(10)
-    driver.quit()
+    # time.sleep(10)
+    # driver.quit()
 
 
 

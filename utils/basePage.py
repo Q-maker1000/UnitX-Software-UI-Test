@@ -50,10 +50,10 @@ class BasePage:
             title = t
         else:
             title = "_" + t
-        path = '../image/screenshots'
+        path = '/home/unitx/Qian/pytest-ui/image/screenshots'
         ts = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
         if not os.path.exists(path):
-            os.mkdir("../image/screenshots")
+            os.mkdir(path)
         filename = os.path.join(path, ts + title + ".png")
         self.driver.save_screenshot(filename)
 
@@ -69,7 +69,7 @@ class BasePage:
             print("元素找不到{}".format(locator))
 
     # 等待元素可被点击,然后点击
-    def wait_element_clickable_and_click(self, locator, timeout=20, poll=0.1):
+    def wait_element_clickable_and_click(self, locator, timeout=25, poll=0.5):
         try:
             el = WebDriverWait(self.driver, timeout=timeout, poll_frequency=poll).until(
                 expected_conditions.element_to_be_clickable(locator)
