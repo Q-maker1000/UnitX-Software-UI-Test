@@ -31,7 +31,7 @@ class TestDefectNetwork:
         HardwareSettingPage(driver).create_capture(cc_name)
         driver.quit()
 
-    def test_add_1cc_to_sequence(self):
+    def test_add_cc_to_sequence(self):
         driver = start_software.start("optix")
         HardwareSettingPage(driver).config_hardware_setting()
         HardwareSettingPage(driver).add_cc_to_sequence("", 1, True)
