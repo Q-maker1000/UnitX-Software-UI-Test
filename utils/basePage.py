@@ -87,7 +87,7 @@ class BasePage:
         return self
 
     # 等待元素被加载
-    def wait_element_presence(self, locator, timeout=20, poll=0.5):
+    def wait_element_presence(self, locator, timeout=25, poll=0.5):
         try:
             el = WebDriverWait(self.driver, timeout=timeout, poll_frequency=poll).until(
                 expected_conditions.presence_of_element_located(locator)
