@@ -24,6 +24,11 @@ class HomeLocs:
     el_sequence_update_btn_locator = (By.XPATH, '/html/body/div[1]/div/div/div[2]/div[2]/div[4]/div/div[1]/button')
 
     el_cc_exist_list_locator = (By.XPATH, '/html/body/div[4]/div[3]')
+    el_cc_list_locator = (By.CSS_SELECTOR, '.MuiListItemText-root.MuiListItemText-dense')
+    el_cc_selector_locator = (By.XPATH, '/html/body/div/div/div/div[2]/div/div[2]/div/div/div')
+    el_cc_sequence_selected_li_locator = (By.CSS_SELECTOR, '.MuiButtonBase-root.MuiListItem-root.MuiMenuItem-root.Mui'
+                                                           '-selected.MuiMenuItem-gutters.MuiListItem-gutters'
+                                                           '.MuiListItem-button.Mui-selected')
 
     el_select_folder_locator = (By.XPATH, '/html/body/div[1]/div/div/div[2]/div[2]/div[5]/div[2]/div/div[1]')
     el_save_image_locator = (By.XPATH, '/html/body/div[1]/div/div/div[2]/div[2]/div[5]/div[3]/button')

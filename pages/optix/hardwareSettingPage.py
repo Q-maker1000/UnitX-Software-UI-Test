@@ -1,5 +1,7 @@
 import datetime
 import os
+import time
+
 import pyautogui
 from selenium.webdriver import ActionChains, Keys
 
@@ -8,6 +10,13 @@ from pageLocators.optix.homeLocs import HomeLocs
 from utils import start_software
 from pageLocators.optix.commonLocs import CommonLocs
 from utils.basePage import BasePage
+
+
+def count_files_in_folder(folder_path):
+    file_count = 0
+    for root, dirs, files in os.walk(folder_path):
+        file_count += len(files)
+    return file_count
 
 
 class HardwareSettingPage(BasePage):
@@ -35,6 +44,13 @@ class HardwareSettingPage(BasePage):
         # 点击创建按钮
         self.wait_element_clickable_and_click(HomeLocs.el_create_sequence_btn_locator)
 
+        # 断言名字
+        self.click(HomeLocs.el_sequence_selector_locator)
+        el_sequence_selected_li = self.location_element(HomeLocs.el_cc_sequence_selected_li_locator)
+        el_sequence_name = el_sequence_selected_li.find_element(*CommonLocs.el_em_locator)
+        sequence_name = el_sequence_name.get_attribute('innerHTML')
+        assert sequence_name == name
+
     def create_capture(self, name, exposure=19, is_ring=True, controller_version="v4"):
         self.wait_element_clickable_and_click(HomeLocs.el_create_cc_locator)
 
@@ -60,6 +76,18 @@ class HardwareSettingPage(BasePage):
 
         self.wait_element_clickable_and_click(HomeLocs.el_create_cc_btn_locator)
 
+        # TODO 断言(这边采用截图方式断言),因为需要断言的地方太多了.需要的话后续补上
+        self.wait_element_clickable_and_click(HomeLocs.el_cc_selector_locator)
+        el_cc_selected_li = self.location_element(HomeLocs.el_cc_sequence_selected_li_locator)
+        el_cc_name = el_cc_selected_li.find_element(*CommonLocs.el_em_locator)
+        cc_name = el_cc_name.get_attribute('innerHTML')
+        # 断言名字
+        assert cc_name == name
+        # 剩下的截图断言
+        el_cc_selected_li.click()
+        time.sleep(1)
+        self.screen_shot("create_capture")
+
     def select_pattern_v4(self):
         el_select_light_form = self.location_element(HomeLocs.el_select_light_form_locator)
         light_list = el_select_light_form.find_elements(*CommonLocs.el_path_locator)
@@ -74,11 +102,16 @@ class HardwareSettingPage(BasePage):
             el_sequence_list = self.location_element(HomeLocs.el_sequence_list_locator)
             sequence_list = el_sequence_list.find_elements(*CommonLocs.el_li_locator)
             sequence_list[sequence_index].click()
+
+        # 获取sequence原有cc数(包含两个按钮所以要 -2)
+        cc_count_old = len(self.location_elements(HomeLocs.el_cc_list_locator))-2
+
         # 添加cc
         cc_exist_list = self.get_cc_exist_list()
+        # 添加前exist_cc列表中的cc数
+        exist_cc_count = len(cc_exist_list)
 
         if is_all_cc:
-            exist_cc_count = len(cc_exist_list)
             for i in range(exist_cc_count-1):
                 cc_exist_list[0].click()
                 cc_exist_list = self.get_cc_exist_list()
@@ -88,17 +121,24 @@ class HardwareSettingPage(BasePage):
         # 更新设置
         self.wait_element_clickable_and_click(HomeLocs.el_sequence_update_btn_locator)
 
+        # 获取更新后cc数
+        cc_count_new = len(self.location_elements(HomeLocs.el_cc_list_locator)) - 2
+        if is_all_cc:
+            assert (cc_count_new - cc_count_old) == exist_cc_count
+
+        assert (cc_count_new - cc_count_old) == 1
+
     def get_cc_exist_list(self):
         self.wait_element_clickable_and_click(HomeLocs.el_add_exist_cc_locator)
         el_cc_exist_list = self.location_element(HomeLocs.el_cc_exist_list_locator)
         cc_exist_list = el_cc_exist_list.find_elements(*CommonLocs.el_li_locator)
         return cc_exist_list
 
-    def save_image_without_compute(self, count=1):
+    def save_image(self, count=1, is_compute=False):
         # 创建存放图片文件夹
         today = datetime.date.today()
         ts = today.strftime("%Y-%m-%d")
-        folder_path = "/home/unitx/optix/optix_src/0_image-" + ts
+        folder_path = "/home/unitx/Qian/pytest-ui/utils/0_image-" + ts
         if not os.path.exists(folder_path):
             os.mkdir(folder_path)
 
@@ -106,18 +146,40 @@ class HardwareSettingPage(BasePage):
         self.wait_element_clickable_and_click(HomeLocs.el_select_folder_locator)
 
         # 使用pyautogui来处理系统窗口
-        file_path = "/path/to/file.txt"
-        pyautogui.write(file_path)
+        pyautogui.press('up')
+        pyautogui.typewrite("0_image-" + ts)
+        time.sleep(0.3)
+        pyautogui.press('enter')
         pyautogui.press('enter')
 
-        ActionChains(self.driver).send_keys(Keys.UP).perform()
-        ActionChains(self.driver).send_keys(Keys.ENTER).perform()
+        # 勾选 max 和 min 复选框
+        if is_compute:
+            self.click(HomeLocs.el_save_in_max_locator)
+            self.click(HomeLocs.el_save_in_min_locator)
 
-        # for i in range(count):
-        #     self.wait_element_clickable_and_click(HomeLocs.el_save_image_locator)
+        # 获取cc数量
+        cc_count = len(self.location_elements(HomeLocs.el_cc_list_locator)) - 2
+        # 记录初始文件数量
+        initial_count = count_files_in_folder(folder_path)
+
+        # 点击保存
+        for i in range(count):
+            time.sleep(0.3)
+            self.wait_element_clickable_and_click(HomeLocs.el_save_image_locator)
+
+        # 再次检查文件数量
+        time.sleep(1)
+        new_count = count_files_in_folder(folder_path)
+        # 计算增加量
+        file_increase = new_count - initial_count
+        if is_compute:
+            assert file_increase == 2 * count
+        assert file_increase == cc_count * count
 
 
 if __name__ == '__main__':
+    cc_name1 = "ui_test_09"
     driver = start_software.start("optix")
     HardwareSettingPage(driver).config_hardware_setting()
-    HardwareSettingPage(driver).save_image_without_compute()
+    HardwareSettingPage(driver).create_capture(cc_name1)
+    driver.quit()

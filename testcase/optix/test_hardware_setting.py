@@ -18,11 +18,10 @@ class TestDefectNetwork:
         driver.quit()
 
     def test_create_sequence(self):
-        sequence_name = "ui_test_01"
+        sequence_name = "ui_test_05"
         driver = start_software.start("optix")
         HardwareSettingPage(driver).config_hardware_setting()
         HardwareSettingPage(driver).create_sequence(sequence_name)
-        BasePage(driver).screen_shot("create_sequence")
         driver.quit()
 
     def test_create_cc(self):
@@ -30,13 +29,25 @@ class TestDefectNetwork:
         driver = start_software.start("optix")
         HardwareSettingPage(driver).config_hardware_setting()
         HardwareSettingPage(driver).create_capture(cc_name)
-        BasePage(driver).screen_shot("create_capture")
         driver.quit()
 
     def test_add_1cc_to_sequence(self):
         driver = start_software.start("optix")
         HardwareSettingPage(driver).config_hardware_setting()
-        BasePage(driver).screen_shot("add_cc_to_sequence1")
         HardwareSettingPage(driver).add_cc_to_sequence("", 1, True)
-        BasePage(driver).screen_shot("add_cc_to_sequence2")
-        # driver.quit()
+        driver.quit()
+
+    def test_save_image_without_compute(self):
+        driver = start_software.start("optix")
+        HardwareSettingPage(driver).config_hardware_setting()
+        HardwareSettingPage(driver).save_image(3, True)
+        driver.quit()
+
+    def test_save_image_with_compute(self):
+        driver = start_software.start("optix")
+        HardwareSettingPage(driver).config_hardware_setting()
+        HardwareSettingPage(driver).save_image(3)
+        driver.quit()
+
+
+

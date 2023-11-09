@@ -8,3 +8,4 @@ class CommonLocs:
     el_path_locator = (By.TAG_NAME, 'path')
     el_span_locator = (By.TAG_NAME, 'span')
     el_li_locator = (By.TAG_NAME, 'li')
+    el_em_locator = (By.TAG_NAME, 'em')

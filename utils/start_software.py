@@ -24,3 +24,4 @@ def start(app_path="cortex"):
         options=options
     )
     return driver
+

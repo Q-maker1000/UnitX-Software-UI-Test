@@ -16,5 +16,5 @@ def login():
     btn_login.click()
     return driver
 
-# if __name__ == '__main__':
-#     driver = start_software.start("optix")
+if __name__ == '__main__':
+    driver = start_software.start("optix")
