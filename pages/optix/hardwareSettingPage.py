@@ -76,7 +76,7 @@ class HardwareSettingPage(BasePage):
 
         self.wait_element_clickable_and_click(HomeLocs.el_create_cc_btn_locator)
 
-        # TODO 断言(这边采用截图方式断言),因为需要断言的地方太多了.需要的话后续补上
+        # 断言(这边采用截图方式断言),因为需要断言的地方太多了.需要的话后续补上
         self.wait_element_clickable_and_click(HomeLocs.el_cc_selector_locator)
         el_cc_selected_li = self.location_element(HomeLocs.el_cc_sequence_selected_li_locator)
         el_cc_name = el_cc_selected_li.find_element(*CommonLocs.el_em_locator)
