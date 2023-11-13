@@ -53,7 +53,7 @@ class HardwareSettingPage(BasePage):
         # 点击创建按钮
         self.wait_element_clickable_and_click(HomeLocs.el_create_sequence_btn_locator)
 
-        # 断言名字
+        # 断言seq名字
         self.click(HomeLocs.el_sequence_selector_locator)
         el_sequence_selected_li = self.wait_element_presence(HomeLocs.el_cc_sequence_selected_li_locator)
         el_sequence_name = el_sequence_selected_li.find_element(*CommonLocs.el_em_locator)
@@ -241,7 +241,6 @@ class HardwareSettingPage(BasePage):
                 EC.presence_of_element_located(HomeLocs.el_tip_locator)
             )
         except TimeoutException:
-            print("11111111111111")
             self.wait_element_clickable_and_click(HomeLocs.el_confirm_btn_locator)
             el_tip = self.wait_element_presence(HomeLocs.el_tip_locator)
 
