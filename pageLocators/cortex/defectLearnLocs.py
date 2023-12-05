@@ -34,6 +34,12 @@ class DefectLearnLocs:
     el_network_information_locator = (By.CSS_SELECTOR, '.right-status')
     # network bottom 行元素
     el_row_network_bottom_locator = (By.CSS_SELECTOR, '.flex-row')
+    el_btn_network_config_btn_list_locator = (By.CSS_SELECTOR, '.MuiButtonBase-root.MuiButton-root.MuiButton-text')
+    el_left_btn_list_locator = (By.CSS_SELECTOR, '.uiButtonBase-root.MuiButton-root.MuiButton-text.MuiButton-fullWidth')
+    el_input_clone_network_locator = (By.XPATH, '/html/body/div[2]/div[3]/div/div/form/div/div[2]/div/input')
+    el_btn_clone_network_locator = (By.XPATH, '//*[@id="Clone-form-accept"]')
+    el_div_model_version_selector_locator = (By.XPATH, './div[1]/div[1]/div/div[2]/div')
+    el_span_model_version_locator = (By.XPATH, './span')
 
     # # ===============================通用元素===============================
     # 删除network确认按钮

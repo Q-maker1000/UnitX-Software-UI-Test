@@ -20,7 +20,7 @@ class BasePage:
                 expected_conditions.title_contains(self.title)
             )
         except:
-            print("你的操作可能不在当前页面中，可能会引发异常{}".format(self.title))
+            logging.error("你的操作可能不在当前页面中，可能会引发异常{}".format(self.title))
 
     # 查找元素
     def location_element(self, locator):
@@ -30,7 +30,7 @@ class BasePage:
         except AttributeError:
             # 如果找不到元素，截图
             self.screen_shot()
-            print("元素找不到：{}".format(locator))
+            logging.error("元素找不到：{}".format(locator))
 
     # 查找元素
     def location_elements(self, locator):
@@ -40,7 +40,7 @@ class BasePage:
         except AttributeError:
             # 如果找不到元素，截图
             self.screen_shot()
-            print("元素找不到：{}".format(locator))
+            logging.error("元素找不到：{}".format(locator))
 
     # 元素找不到时截图
     def screen_shot(self, t=''):
@@ -50,7 +50,7 @@ class BasePage:
             title = t
         else:
             title = "_" + t
-        path = '/home/unitx/Qian/pytest-ui/image/screenshots'
+        path = '/home/unitx/A-1000/UnitX-Software-UI-Test/image/screenshots'
         ts = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
         if not os.path.exists(path):
             os.mkdir(path)
@@ -58,7 +58,7 @@ class BasePage:
         self.driver.save_screenshot(filename)
 
     # 等待元素可被点击
-    def wait_element_clickable(self, locator, timeout=20, poll=0.5):
+    def wait_element_clickable(self, locator, timeout=15, poll=0.5):
         try:
             el = WebDriverWait(self.driver, timeout=timeout, poll_frequency=poll).until(
                 expected_conditions.element_to_be_clickable(locator)
@@ -66,10 +66,10 @@ class BasePage:
             return el
         except:
             self.screen_shot()
-            print("元素找不到{}".format(locator))
+            logging.error("元素找不到{}".format(locator))
 
     # 等待元素可被点击,然后点击
-    def wait_element_clickable_and_click(self, locator, timeout=25, poll=0.5):
+    def wait_element_clickable_and_click(self, locator, timeout=15, poll=0.5):
         try:
             el = WebDriverWait(self.driver, timeout=timeout, poll_frequency=poll).until(
                 expected_conditions.element_to_be_clickable(locator)
@@ -77,17 +77,16 @@ class BasePage:
             el.click()
         except:
             self.screen_shot()
-            print("元素找不到{}".format(locator))
+            logging.error("元素找不到{}".format(locator))
 
     # 点击元素
     def click(self, locator):
-        logging.info("click....")
         # 当元素可被点击时再点击
         self.wait_element_clickable(locator).click()
         return self
 
     # 等待元素被加载
-    def wait_element_presence(self, locator, timeout=25, poll=0.5):
+    def wait_element_presence(self, locator, timeout=15, poll=0.5):
         try:
             el = WebDriverWait(self.driver, timeout=timeout, poll_frequency=poll).until(
                 expected_conditions.presence_of_element_located(locator)
@@ -95,7 +94,17 @@ class BasePage:
             return el
         except:
             self.screen_shot()
-            print("元素找不到{}".format(locator))
+            logging.error("元素找不到{}".format(locator))
+
+    def wait_elements_presence(self, locator, timeout=10, poll=0.5):
+        try:
+            el = WebDriverWait(self.driver, timeout=timeout, poll_frequency=poll).until(
+                expected_conditions.presence_of_all_elements_located(locator)
+            )
+            return el
+        except:
+            self.screen_shot()
+            logging.error("元素找不到{}".format(locator))
 
     # 输入文字内容
     def enter_text(self, locator, value=''):

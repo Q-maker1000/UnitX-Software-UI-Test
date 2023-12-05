@@ -1,9 +1,13 @@
+import logging
 import time
 from datetime import datetime
 
+import pyautogui
+from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 
-from pageLocators.defectLearnLocs import DefectLearnLocs
+from pageLocators.cortex.commonLocs import CommonLocs
+from pageLocators.cortex.defectLearnLocs import DefectLearnLocs
 from utils.basePage import BasePage
 from utils.common import login
 
@@ -13,28 +17,29 @@ class DefectLearnPage_NGTYPE(BasePage):
     def __init__(self, driver):
         self.driver = driver
 
-    def create_ng_type(self, type_name_pre, number=1):
-        ng_type_list = []
+    def check_version(self, version):
+        self.wait_element_clickable_and_click(CommonLocs.el_btn_nav_locator)
+        el_div_version = self.wait_element_presence(CommonLocs.el_div_version_locator)
+        text_version = el_div_version.get_attribute('innerHTML')
+        logging.info(f'CorteX Version is {text_version}')
+        assert text_version == version
+        pyautogui.click(800, 10)
+
+    def create_ng_type(self, ng_type_name):
         # 点击ng type管理按钮
         self.wait_element_clickable_and_click(DefectLearnLocs.el_btn_ng_type_manager_locator)
-        for i in range(number):
-            i += 1
-            ng_type_name = type_name_pre + "-" + str(i)
-            time.sleep(0.05)
-            # 点击创建ng type按钮
-            self.wait_element_clickable_and_click(DefectLearnLocs.el_btn_create_ng_type_locator)
-            # 输入ng type名称
-            self.clear_text(DefectLearnLocs.el_ipt_ng_type_name_locator)
-            self.enter_text(DefectLearnLocs.el_ipt_ng_type_name_locator, ng_type_name)
-            # 点击创建
-            self.wait_element_clickable_and_click(DefectLearnLocs.el_btn_confirm_ng_type_locator)
-            self.driver.implicitly_wait(5)
-            print('create the NG type: %s' % ng_type_name)
-            ng_type_list.append(ng_type_name)
-        # 创建完截屏
-        time.sleep(0.3)
-        self.screen_shot("create ng type")
-        return ng_type_list
+        time.sleep(0.05)
+        # 点击创建ng type按钮
+        self.wait_element_clickable_and_click(DefectLearnLocs.el_btn_create_ng_type_locator)
+        # 输入ng type名称
+        self.clear_text(DefectLearnLocs.el_ipt_ng_type_name_locator)
+        self.enter_text(DefectLearnLocs.el_ipt_ng_type_name_locator, ng_type_name)
+        # 点击创建
+        self.wait_element_clickable_and_click(DefectLearnLocs.el_btn_confirm_ng_type_locator)
+        logging.info(f'create defect type：{ng_type_name}')
+        time.sleep(0.5)
+        # ActionChains(self.driver).move_by_offset(0, 800).click().perform()
+        pyautogui.click(0, 800)
 
     def delete_ng_type(self, name=''):
         # 点击ng type管理按钮
@@ -43,7 +48,6 @@ class DefectLearnPage_NGTYPE(BasePage):
         row_ng_list = self.location_elements(DefectLearnLocs.el_row_ng_type_locator)
         if name != '':
             # 在列表中查找对应名字的ng type
-            # TODO 优化: 可以用算法进行匹配而非遍历
             for row_ng in row_ng_list:
                 ng_type_name = row_ng.find_element(By.TAG_NAME, 'div').get_attribute('innerHTML')
                 if name == ng_type_name:
@@ -109,14 +113,6 @@ class DefectLearnPage_NGTYPE(BasePage):
 
 
 if __name__ == '__main__':
-    driver = login()
-    ts = datetime.now().strftime("%H%M%S")
-    # 创建ng type
-    DefectLearnPage_NGTYPE(driver).create_ng_type("a_v3110_" + ts, 3)
-
-    # 删除ng type
-    # DefectLearnPage_NGTYPE(driver).delete_ng_type()
-
-    # 修改ng type
-    # DefectLearnPage_NGTYPE(driver).edit_ng_type("test-ui", "test-ui-new2023-11-06-1699246504-1")
-    driver.quit()
+    for i in range(2):
+        ts = datetime.now().strftime("%Y-%m-%d_%H-%M-%S-%f")[:-1]
+        print(ts)
