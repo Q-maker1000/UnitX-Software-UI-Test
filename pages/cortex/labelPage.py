@@ -6,6 +6,7 @@ from selenium.webdriver.common.by import By
 
 from pageLocators.cortex.commonLocs import CommonLocs
 from pageLocators.cortex.labelLocs import LabelLocs
+from pageLocators.cortex.reviewLabelLocs import ReviewLabelLocs
 from utils.basePage import BasePage
 
 
@@ -168,3 +169,9 @@ class LabelPage(BasePage):
         el_images_list = el_div_images.find_elements(By.XPATH, './div')
         return el_images_list
 
+    def label_with_infer(self):
+        el_images_list = self.list_images()
+        count = len(el_images_list)
+        for i in range(count):
+            self.wait_element_clickable_and_click(ReviewLabelLocs.el_btn_label_with_infer_locator)
+            self.wait_element_clickable_and_click(ReviewLabelLocs.el_btn_save_locator)

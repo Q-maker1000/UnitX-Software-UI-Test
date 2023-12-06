@@ -1,4 +1,5 @@
 import logging
+import time
 
 import pyautogui
 from selenium.webdriver import ActionChains
@@ -93,3 +94,19 @@ class ReviewLabelPage(BasePage):
             f'len(el_images_list_end) - len(el_images_list_init) = {len(el_images_list_end)} - {len(el_images_list_init)}')
         assert len(el_images_list_end) - len(el_images_list_init) == count
         self.click(CommonLocs.el_go_back_locator)
+
+    def select_ng_type_to_label(self):
+        el_div_existing_label_list = self.wait_elements_presence(ReviewLabelLocs.el_div_existing_label_list_locator)
+        logging.info(len(el_div_existing_label_list))
+        count = 0
+        for i in el_div_existing_label_list:
+            el_dive_existing_label_selector = i.find_element(*ReviewLabelLocs.el_dive_existing_label_selector_locator)
+            el_dive_existing_label_selector.click()
+            el_ul_existing_label_selector = self.wait_element_presence(ReviewLabelLocs.el_ul_existing_label_selector_locator)
+            el_ng_type_list = el_ul_existing_label_selector.find_elements(*CommonLocs.el_li_locator)
+            logging.info(len(el_ng_type_list))
+            el_ng_type_list[count].click()
+            # logging.info(el_ng_type_list[count+1].get_attribute('innerHTML'))
+            count += 1
+
+

@@ -14,7 +14,7 @@ class TestDefectNetwork:
 
     def test_version(self):
         driver = start_software.start("optix")
-        HardwareSettingPage(driver).check_version("v3.11.0")
+        HardwareSettingPage(driver).check_version("v4.0.3")
         BasePage(driver).screen_shot("check_version")
         driver.quit()
 

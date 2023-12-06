@@ -48,20 +48,19 @@ class DefectLearnPage_NGTYPE(BasePage):
         row_ng_list = self.location_elements(DefectLearnLocs.el_row_ng_type_locator)
         if name != '':
             # 在列表中查找对应名字的ng type
-            for row_ng in row_ng_list:
-                ng_type_name = row_ng.find_element(By.TAG_NAME, 'div').get_attribute('innerHTML')
-                if name == ng_type_name:
-                    self.driver.execute_script("arguments[0].scrollIntoView();", row_ng)
-                    self.screen_shot("get ng type name before delete")
-                    # 获取ng type删除按钮
-                    btn_list = row_ng.find_elements(*DefectLearnLocs.el_button_locator)
-                    btn_delete_ng_type = btn_list[-1]
-                    # 点击删除按钮
-                    btn_delete_ng_type.click()
-                    # 确认删除ng type
-                    self.wait_element_clickable_and_click(DefectLearnLocs.el_btn_confirm_locator)
-                    self.screen_shot("get ng type name after delete")
-            print("无法获取该ng type")
+            row_ng = self.get_ng_type_by_name(name)
+            if row_ng is None:
+                raise Exception(f'No ng type can named {name}')
+            # 获取ng type删除按钮
+            btn_list = row_ng.find_elements(*DefectLearnLocs.el_button_locator)
+            btn_delete_ng_type = btn_list[-1]
+            # 点击删除按钮
+            btn_delete_ng_type.click()
+            # 确认删除ng type
+            self.wait_element_clickable_and_click(DefectLearnLocs.el_btn_confirm_locator)
+
+            ng_type_del = self.get_ng_type_by_name(name)
+            assert ng_type_del is None
         else:
             self.screen_shot("get ng type list")
             # 依次删除
@@ -110,6 +109,18 @@ class DefectLearnPage_NGTYPE(BasePage):
                     print("edited ng type successfully")
                     return True
             print("no ng type name %s" % old_name)
+
+    def get_ng_type_by_name(self, name):
+        # 点击ng type管理按钮
+        self.wait_element_clickable_and_click(DefectLearnLocs.el_btn_ng_type_manager_locator)
+        # 获取ng type列表
+        row_ng_list = self.location_elements(DefectLearnLocs.el_row_ng_type_locator)
+        for row_ng in row_ng_list:
+            ng_type_name = row_ng.find_element(By.TAG_NAME, 'div').get_attribute('innerHTML')
+            if name == ng_type_name:
+                return row_ng
+        return None
+
 
 
 if __name__ == '__main__':

@@ -5,6 +5,7 @@ class DefectLearnLocs:
 
     # ===============================缺陷管理元素===============================
     # ng type管理按钮
+    ''
     el_btn_ng_type_manager_locator = (By.XPATH, '/html/body/div/div/div[2]/div[1]/div/button[1]')
     # 创建ng type按钮 /html/body/div[2]/div[3]/div/div/button
     el_btn_create_ng_type_locator = (By.XPATH, '/html/body/div[2]/div[3]/div/div/button')

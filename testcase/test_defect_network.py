@@ -56,7 +56,7 @@ class TestDefectNetwork:
         network_name_list.append(network_name)
 
     def test_create_ng_type(self):
-        for i in range(2):
+        for i in range(4):
             ng_type_name = name_pre + datetime.now().strftime("%Y-%m-%d_%H-%M-%S-%f")[:-2]
             defectLearnPage_NGTYPE.create_ng_type(ng_type_name)
             ng_type_name_list.append(ng_type_name)
@@ -153,7 +153,7 @@ class TestDefectNetwork:
 
     def test_restore_original_resolution_and_add_new_ng_type(self):
         network_name = network_name_list[0]
-        ng_type_name = 'NG:' + ng_type_name_list[1]
+        ng_type_name = 'NG:' + ng_type_name_list[2]
         # ng_type_name = 'NG:ui_test_2023-12-01_13-06-27-5519'
 
         defectLearnPage_Network.select_left_network_btn(network_name, LeftBtn.LABEL_INDEX)
@@ -213,7 +213,7 @@ class TestDefectNetwork:
         # network_name = network_name_list[0]
 
         defectLearnPage_Network.select_left_network_btn(network_name, LeftBtn.REVIEW_LABELS_INDEX)
-        reviewLabelPage.move_last_image_to_validation(5)
+        reviewLabelPage.move_last_image_to_validation(2)
         check_review_label('test_move_label_to_validation')
         defectLearnPage_Network.select_left_network_btn(network_name, LeftBtn.TRAIN_FROM_SCRATCH_INDEX)
 
@@ -227,7 +227,7 @@ class TestDefectNetwork:
         # network_name = network_name_list[0]
 
         defectLearnPage_Network.select_left_network_btn(network_name, LeftBtn.REVIEW_LABELS_INDEX)
-        reviewLabelPage.move_last_image_to_train(5)
+        reviewLabelPage.move_last_image_to_train(2)
         check_review_label('test_move_label_to_train_and_train_increment')
         defectLearnPage_Network.select_left_network_btn(network_name, LeftBtn.TRAIN_INCREMENTAL_INDEX)
 
@@ -264,9 +264,30 @@ class TestDefectNetwork:
         check_review_label('test_model_version_and_train_incremental')
         defectLearnPage_Network.select_left_network_btn(network_name, LeftBtn.TRAIN_INCREMENTAL_INDEX)
 
-    def test_check_if_reasonable(self):
+    def test_check_if_reasonable_13(self):
         defectLearnPage_Network.is_train_end(network_name)
-        check_label_infer('test_check_if_reasonable')
+        check_label_infer('test_check_if_reasonable_13')
 
+    def test_delete_ng_type(self):
+        # ng_name = ng_type_name_list[0]
+        ng_name = 'ui_test_2023-12-01_15-07-29-5100'
+        defectLearnPage_NGTYPE.delete_ng_type(ng_name)
 
+    # def test_check_ng_type_if_present(self):
+    #
+    # def test_train_after_delete_ng_type(self):
+    #
+    # def test_check_if_reasonable_14(self):
+    #     defectLearnPage_Network.is_train_end(network_name)
+    #     check_label_infer('test_check_if_reasonable_14')
 
+    def test_some(self):
+        network = 'ui_test_2023-12-05_13-45-23-0802'
+        # defectLearnPage_Network.select_left_network_btn(network, LeftBtn.REVIEW_LABELS_INDEX)
+        # reviewLabelPage.select_ng_type_to_label()
+
+        # defectLearnPage_Network.select_left_network_btn(network, LeftBtn.LABEL_INDEX)
+        # labelPage.label_with_infer()
+
+        defectLearnPage_Network.select_left_network_btn(network, LeftBtn.REVIEW_LABELS_INDEX)
+        reviewLabelPage.move_last_image_to_validation(10)
