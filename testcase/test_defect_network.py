@@ -282,7 +282,7 @@ class TestDefectNetwork:
     #     check_label_infer('test_check_if_reasonable_14')
 
     def test_some(self):
-        network = 'ui_test_2023-12-05_13-45-23-0802'
+        network = 'test-valid'
         # defectLearnPage_Network.select_left_network_btn(network, LeftBtn.REVIEW_LABELS_INDEX)
         # reviewLabelPage.select_ng_type_to_label()
 
@@ -291,3 +291,9 @@ class TestDefectNetwork:
 
         defectLearnPage_Network.select_left_network_btn(network, LeftBtn.REVIEW_LABELS_INDEX)
         reviewLabelPage.move_last_image_to_validation(10)
+        defectLearnPage_Network.select_left_network_btn(network, LeftBtn.TRAIN_FROM_SCRATCH_INDEX)
+
+        # defectLearnPage_Network.select_left_network_btn(network, LeftBtn.LABEL_INDEX)
+        # defectLearnPage_Network.pre_process(0, 4128, 0, 3008, 1600, 1165)
+        # labelPage.labeling(75, 'label_02')
+
