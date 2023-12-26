@@ -51,3 +51,8 @@ class HomeLocs:
     el_confirm_btn_locator = (By.XPATH, '/html/body/div[4]/div[3]/div/div[2]/button[1]')
 
     el_tip_locator = (By.CSS_SELECTOR, '.MuiSnackbar-root.MuiSnackbar-anchorOriginTopCenter')
+
+    el_ul_selector_list_locator = (By.XPATH, '//*[@id="menu-"]/div[3]/ul')
+    el_div_cc_list_in_seq_locator = (By.XPATH, '//*[@id="root"]/div/div/div[2]/div[2]/div[3]/div/div[1]')
+
+    el_div_choose_saving_image_folder_path = (By.CSS_SELECTOR, '.MuiBox-root.jss32')

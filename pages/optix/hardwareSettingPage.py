@@ -1,4 +1,5 @@
 import datetime
+import logging
 import os
 import time
 
@@ -32,16 +33,28 @@ class HardwareSettingPage(BasePage):
         self.wait_element_clickable_and_click(CommonLocs.el_nav_locator)
         el_version = self.wait_element_presence(CommonLocs.el_version_locator)
         version_text = el_version.get_attribute("innerHTML")
+        logging.info(f'Check software version is {version_text}')
         assert version_text == version
+        self.click(CommonLocs.el_div_hardware_setting_locator)
 
     def config_hardware_setting(self):
+        # el_hardware_setting = self.wait_element_presence(HardwareSettingLocs.el_div_hardware_setting_locator)
+        # hardware_selector_list = el_hardware_setting.find_elements(*HardwareSettingLocs.el_div_selector_locator)
+        # for _ in hardware_selector_list:
+        #     _.click()
+        #     self.wait_element_clickable_and_click(HardwareSettingLocs.el_li_hardware_setting_item_locator)
+        #     text = _.get_attribute('innerHTML')
+        #     logging.info(f'hardware setting:{text}')
+
         for i in range(3):
             el_OK_btn = self.wait_element_presence(HardwareSettingLocs.el_OK_locator)
             if el_OK_btn.is_enabled():
                 self.wait_element_clickable_and_click(HardwareSettingLocs.el_OK_locator)
+                logging.info(f'Go to Main Page')
                 break
             else:
                 self.click(HardwareSettingLocs.el_refresh_locator)
+            logging.info(f'Can not go to Main Page. Try {i} times')
 
     def create_sequence(self, name):
         # 点击添加按钮
@@ -237,7 +250,7 @@ class HardwareSettingPage(BasePage):
         self.click(HomeLocs.el_io_upload_btn_locator)
 
         try:
-            el_tip = WebDriverWait(self.driver, timeout=2, poll_frequency=0.5).until(
+            el_tip = WebDriverWait(self.driver, timeout=1.5, poll_frequency=0.5).until(
                 EC.presence_of_element_located(HomeLocs.el_tip_locator)
             )
         except TimeoutException:
@@ -245,13 +258,11 @@ class HardwareSettingPage(BasePage):
             el_tip = self.wait_element_presence(HomeLocs.el_tip_locator)
 
         tip = el_tip.find_element(By.XPATH, './/div/div').text
-        self.screen_shot("upload_controller")
         assert tip == f'Success: Sequence uploaded to hardware io: {io_id}'
+        print(tip)
 
 
 if __name__ == '__main__':
-    # cc_name1 = "ui_test_09"
-    driver = start_software.start("optix")
-    HardwareSettingPage(driver).config_hardware_setting()
-    HardwareSettingPage(driver).upload_to_controller("ui_test_v3110_001_2023-11-091", 9)
-    driver.quit()
+        ptest = ['a', 'b', 'c']
+        for index, item in enumerate(ptest):
+            print(index, item)

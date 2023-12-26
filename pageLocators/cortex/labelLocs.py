@@ -27,3 +27,7 @@ class LabelLocs:
                                                 '.MuiTypography-displayBlock')
     el_btn_cancel_locator = (By.XPATH, '//*[@id="cancel-label-button"]')
     el_div_images_locator = (By.XPATH, '//*[@id="file-side-bar-image-names-section"]/div[1]/div/div')
+
+    el_btn_remove_image_locator = (By.XPATH, '//*[@id="discard-image-button"]')
+
+    el_img_image_locator = (By.XPATH, '//*[@id="root"]/div/div/div[2]/div[2]/div[2]/div[2]/div/img[1]')

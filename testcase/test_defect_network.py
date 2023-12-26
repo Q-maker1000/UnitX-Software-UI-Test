@@ -14,8 +14,8 @@ from utils.common import login
 driver = login()
 
 name_pre = "ui_test_"
-ng_type_name_list = []
-network_name_list = []
+ng_type_name_list = [name_pre+'ng_type_1', name_pre+'ng_type_2']
+network_name_list = [name_pre+'network_1']
 
 defectLearnPage_NGTYPE = DefectLearnPage_NGTYPE(driver)
 defectLearnPage_Network = DefectLearnPage_Network(driver)
@@ -45,21 +45,25 @@ def check_label_infer(name):
     labelPage.back_to_learn_defect_page()
 
 
+def tear_down():
+    for _ in network_name_list:
+        defectLearnPage_Network.select_top_network_btn(_, TopBtn.ARCHIVE)
+
+    driver.quit()
+
+
 class TestDefectNetwork:
 
     def test_check_version(self):
         defectLearnPage_NGTYPE.check_version(CorteXParams.VERSION)
 
     def test_create_network(self):
-        network_name = name_pre + datetime.now().strftime("%Y-%m-%d_%H-%M-%S-%f")[:-2]
-        defectLearnPage_Network.create_network(network_name)
-        network_name_list.append(network_name)
+        for _ in network_name_list:
+            defectLearnPage_Network.create_network(_)
 
     def test_create_ng_type(self):
-        for i in range(4):
-            ng_type_name = name_pre + datetime.now().strftime("%Y-%m-%d_%H-%M-%S-%f")[:-2]
-            defectLearnPage_NGTYPE.create_ng_type(ng_type_name)
-            ng_type_name_list.append(ng_type_name)
+        for _ in ng_type_name_list:
+            defectLearnPage_NGTYPE.create_ng_type(_)
 
     def test_import_image_to_label(self):
         # network_name = network_name_list[0]
@@ -282,18 +286,26 @@ class TestDefectNetwork:
     #     check_label_infer('test_check_if_reasonable_14')
 
     def test_some(self):
-        network = 'test-valid'
+        network = 'defect-common-5color'
         # defectLearnPage_Network.select_left_network_btn(network, LeftBtn.REVIEW_LABELS_INDEX)
         # reviewLabelPage.select_ng_type_to_label()
 
-        # defectLearnPage_Network.select_left_network_btn(network, LeftBtn.LABEL_INDEX)
-        # labelPage.label_with_infer()
+        defectLearnPage_Network.select_left_network_btn(network, LeftBtn.LABEL_INDEX)
+        # labelPage.remove_last_image()
+        labelPage.remove_oldest_image(12)
+        # labelPage.label_with_infer(59)
 
-        defectLearnPage_Network.select_left_network_btn(network, LeftBtn.REVIEW_LABELS_INDEX)
-        reviewLabelPage.move_last_image_to_validation(10)
-        defectLearnPage_Network.select_left_network_btn(network, LeftBtn.TRAIN_FROM_SCRATCH_INDEX)
+        # defectLearnPage_Network.select_left_network_btn(network, LeftBtn.REVIEW_LABELS_INDEX)
+        # reviewLabelPage.move_last_image_to_validation(10)
+        # defectLearnPage_Network.select_left_network_btn(network, LeftBtn.TRAIN_FROM_SCRATCH_INDEX)
 
         # defectLearnPage_Network.select_left_network_btn(network, LeftBtn.LABEL_INDEX)
         # defectLearnPage_Network.pre_process(0, 4128, 0, 3008, 1600, 1165)
         # labelPage.labeling(75, 'label_02')
 
+    def test_label_image(self):
+        network = 'defect-A2J'
+        defectLearnPage_Network.select_left_network_btn(network, LeftBtn.LABEL_INDEX)
+        # labelPage.label_with_dl()
+        # labelPage.get_pygui_loc()
+        labelPage.label_with_pygui()

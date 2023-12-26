@@ -1,6 +1,11 @@
+import io
 import logging
-import time
 
+import cv2
+import pyautogui
+import pytesseract
+
+from PIL import Image
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 
@@ -169,9 +174,91 @@ class LabelPage(BasePage):
         el_images_list = el_div_images.find_elements(By.XPATH, './div')
         return el_images_list
 
-    def label_with_infer(self):
+    def label_with_infer(self, count=1):
         el_images_list = self.list_images()
-        count = len(el_images_list)
+        if count == 0:
+            count = len(el_images_list)
         for i in range(count):
             self.wait_element_clickable_and_click(ReviewLabelLocs.el_btn_label_with_infer_locator)
             self.wait_element_clickable_and_click(ReviewLabelLocs.el_btn_save_locator)
+        self.back_to_learn_defect_page()
+
+    def remove_last_image(self, count=1):
+        for i in range(count):
+            self.wait_element_clickable_and_click(LabelLocs.el_btn_remove_image_locator)
+        self.back_to_learn_defect_page()
+
+    def remove_oldest_image(self, count=1):
+        el_images_list = self.list_images()
+        el_images_list[-1].click()
+        for i in range(count):
+            self.wait_element_clickable_and_click(LabelLocs.el_btn_remove_image_locator)
+        self.back_to_learn_defect_page()
+
+    def label_with_dl(self):
+        # 获取label按钮并点击
+        self.wait_element_clickable_and_click(LabelLocs.el_btn_label_locator)
+        # 定位包含照片的元素
+        el_image = self.location_element(LabelLocs.el_img_image_locator)
+
+        # 截取包含字母的照片区域
+        location = el_image.location
+        size = el_image.size
+
+        # 截取图像
+        screenshot = self.driver.save_screenshot("screenshot.png")
+        # screenshot = self.driver.get_screenshot_as_png()
+        # image_on_app = Image.open(io.BytesIO(screenshot))
+        # region = image_on_app.crop((location['x'], location['y'], location['x'] + size['width'], location['y'] + size['height']))
+        # # 将截图保存到本地（可选）
+        # region.save("screenshot.png")
+
+        # 计算图像在页面上的坐标
+        img_x = location['x']
+        img_y = location['y']
+
+        screenshot = cv2.imread("screenshot.png")
+        letter_roi = screenshot[img_y:img_y + size['height'], img_x:img_x + size['width']]
+        gray_letter = cv2.cvtColor(letter_roi, cv2.COLOR_BGR2GRAY)
+        # 获取轮廓
+        _, binary_image = cv2.threshold(gray_letter, 127, 255, cv2.THRESH_BINARY)
+        contours, _ = cv2.findContours(binary_image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        # print(contours, _)
+
+        # 创建ActionChains对象
+        actions = ActionChains(self.driver)
+
+        # 在每个轮廓上模拟鼠标点击
+        for contour in contours:
+            for point in contour:
+                x, y = point[0]
+                # 在图像内的坐标位置模拟点击
+                actions.move_to_element_with_offset(el_image, img_x + x, img_y + y)
+                actions.click()
+
+        # 执行鼠标点击操作
+        actions.perform()
+
+    def get_pygui_loc(self):
+        x, y = pyautogui.position()
+        print(x, y)
+
+    def label_3row_3col(self):
+        # 获取label按钮并点击
+        self.wait_element_clickable_and_click(LabelLocs.el_btn_label_locator)
+        # 获取幕布
+        canvas = self.wait_element_presence(LabelLocs.el_img_image_locator)# 获取label按钮并点击
+        logging.info(f'get canvas')
+        # 打标签操作-鼠标点击
+        (ActionChains(self.driver).click(canvas)
+         .send_keys('z')
+         .move_by_offset(-67, 85).click()
+         .move_by_offset(185, 2).click()
+         .move_by_offset(2,  -189).click()
+         .move_by_offset(-184, -1).click()
+         # 键盘保存操作
+         .send_keys('s')
+         .perform())
+        logging.info(f'finish 03 label in a image')
+        # 点击SAVE按钮保存
+        self.wait_element_clickable_and_click(LabelLocs.el_btn_save_locator)

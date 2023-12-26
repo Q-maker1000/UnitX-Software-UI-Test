@@ -9,3 +9,5 @@ class CommonLocs:
     el_span_locator = (By.TAG_NAME, 'span')
     el_li_locator = (By.TAG_NAME, 'li')
     el_em_locator = (By.TAG_NAME, 'em')
+
+    el_div_hardware_setting_locator = (By.XPATH, '/html/body/div[2]/div[3]/div[1]/ul/div')

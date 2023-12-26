@@ -9,14 +9,19 @@ PREFIX = "ui_test_v3110_001_"
 SEQUENCE_LIST = []
 CC_LIST = []
 
+driver = start_software.start("optix")
+
+
+def tear_down():
+    driver.quit()
+
 
 class TestDefectNetwork:
 
     def test_version(self):
-        driver = start_software.start("optix")
-        HardwareSettingPage(driver).check_version("v4.0.3")
+        # driver = start_software.start("optix")
+        HardwareSettingPage(driver).check_version("v4.0.6")
         BasePage(driver).screen_shot("check_version")
-        driver.quit()
 
     def test_hardware_config(self):
         driver = start_software.start("optix")
